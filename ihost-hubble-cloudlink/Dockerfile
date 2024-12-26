@@ -11,5 +11,5 @@ RUN npm install --verbose
 # Run app
 ENV PORT=9009
 EXPOSE $PORT
-ENV IHOST_URL=http://host.docker.internal
+ENV IHOST_URL=http://localhost
 ENTRYPOINT ["npm", "start"]
