@@ -1,0 +1,26 @@
+{
+  "name": "ihost-hubble-cloudlink",
+  "version": "1.0.1",
+  "description": "Hubble Cloudlink integration for iHost",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "docker:start": "docker build . -t ihost-hubble-cloudlink --platform linux/arm/v7 && docker run -it --rm -p 9009:9009 --env IHOST_URL=http://10.0.1.38 --platform linux/arm/v7 ihost-hubble-cloudlink",
+    "docker:publish": "docker build . -t ihost-hubble-cloudlink --platform linux/arm/v7 && docker tag ihost-hubble-cloudlink jjv360/ihost-hubble-cloudlink && docker push jjv360/ihost-hubble-cloudlink"
+  },
+  "author": "jjv360",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jwt-decode": "^4.0.0",
+    "tsx": "^4.19.2",
+    "uuid": "^11.0.3",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/ws": "^8.5.13"
+  }
+}
