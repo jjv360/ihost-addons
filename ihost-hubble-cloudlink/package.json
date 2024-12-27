@@ -1,6 +1,6 @@
 {
   "name": "ihost-hubble-cloudlink",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Hubble Cloudlink integration for iHost",
   "main": "src/index.ts",
   "scripts": {

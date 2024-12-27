@@ -160,6 +160,18 @@ async function runIteration() {
 
     // Get "endpoint" which contains serial number from response
     let endpoint = response.payload.endpoints[0]
+
+    // Get list of cards
+    console.log('Checking cards...')
+    let cards = await iHost.getCards(ihostAccessToken)
+    let card = cards.data.find(c => c.label == 'Hubble CloudLink Usage')
+    if (!card) {
+
+        // Create card
+        console.log('Creating card...')
+        card = await iHost.createCard(ihostAccessToken, 'Hubble CloudLink Usage', iHost.baseURL + ':9009/card.html')
+
+    }
     
     // Monitor the connection
     let lastKeysUpdate = 0

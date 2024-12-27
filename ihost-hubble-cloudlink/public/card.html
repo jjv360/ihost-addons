@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CloudLink</title>
+</head>
+<body>
+
+    <!-- Style -->
+    <style>
+
+        /** App defaults */
+        html, body {
+            width: 100%;
+            height: 100%;
+            padding: 0px;
+            margin: 0px;
+            overflow: hidden;
+            background-color: #fff;
+            font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+    </style>
+
+    <!-- Chart -->
+    <div style="position: absolute; display: flex; align-items: center; justify-content: center; top: 0px; left: 4%; width: 92%; height: 100%; margin-top: -10px; ">
+        <div id="chart" style="width: 100%; ">
+    </div>
+
+    <!-- Code -->
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script>
+
+        /** Called on startup */
+        var chart = null
+        window.addEventListener('DOMContentLoaded', async () => {
+
+            // Catch errors
+            try {
+
+                // Render chart
+                chart = zingchart.render({
+                    id: 'chart',
+                    data: {
+                        type: 'gauge',
+                        plot: {
+                            size: '100%',
+                        },
+                        scaleR: {
+                            // aperture: 180,
+                            minValue: 0,
+                            maxValue: 100,
+                            center: {
+                                visible: false
+                            },
+                            tick: {
+                                visible: false
+                            },
+                            item: {
+                                fontSize: 9,
+                                offsetR: -30,
+                            },
+                            ring: {
+                                size: 10,
+                                rules: [
+                                    {
+                                        rule: '%v <= 75',
+                                        backgroundColor: '#1fa318'
+                                    },
+                                    {
+                                        rule: '%v > 75 && %v < 90',
+                                        backgroundColor: '#e88f1a'
+                                    },
+                                    {
+                                        rule: '%v >= 90',
+                                        backgroundColor: '#d91511'
+                                    }
+                                ]
+                            }
+                        },
+                        series: [
+                            { 
+                                values: [0], 
+                                csize: '3%',
+                                animation: {
+                                    effect: 2,
+                                    method: 1,
+                                    sequence: 4,
+                                    speed: 900
+                                },
+                            }
+                        ],
+                        refresh: {
+                            type: "feed",
+                            transport: "js",
+                            url: "updateMain()",
+                            interval: 1000,
+                            resetTimeout: 1000
+                        },
+                    },
+                });
+
+                // Start updating status
+                while (true) {
+
+                    // Update
+                    try {
+                        await updateMain()
+                    } catch (err) {
+                        console.error(err)
+                    }
+
+                    // Wait
+                    await new Promise(resolve => setTimeout(resolve, 2000))
+
+                }
+
+            } catch (err) {
+
+                // Show setup page
+                console.error(err)
+                alert('Error: ' + err.message)
+                showPage('setup');
+
+            }
+
+        })
+
+        /** Perform API request */
+        async function apiRequest(path, data) {
+
+            // Do request
+            let response = await fetch(path, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+
+            // Get JSON
+            let json = await response.json()
+
+            // Fail on error
+            if (!response.ok || json.error)
+                throw new Error(json.error || 'There was an unknown error.')
+
+            // Done
+            return json
+
+        }
+
+        /** Update main page */
+        async function updateMain(callback) {
+
+            // Fetch current status
+            let status = await apiRequest('/api/status', {})
+            if (!status.loggedIn)
+                return
+
+            // Get load percent
+            let loadPercent = parseInt(status.keys['Sys_Percent_Load']) || 0
+
+            // Return
+            return callback(JSON.stringify({
+                plot0: loadPercent
+            }))
+
+        }
+
+    </script>
+
+</body>
+</html>

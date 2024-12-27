@@ -94,6 +94,7 @@ export class RiotSystemsMonitor {
         this.ws = new WebSocket('wss://portal.riotsystems.cloud/api/ws')
         this.ws.on('open', () => this.onOpen())
         this.ws.on('message', (data) => this.onMessage(data))
+        this.ws.on('error', () => console.error('RiotSystems websockket connection error'))
     }
 
     /** Called when the connection opens */

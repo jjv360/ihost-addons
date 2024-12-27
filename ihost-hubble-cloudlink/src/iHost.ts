@@ -62,6 +62,53 @@ export class iHost {
 
     }
 
+    /** Get list of custom cards */
+    static async getCards(accessToken: string) {
+
+        // Get cards
+        let json = await this.sendRequest('GET', '/open-api/v2/rest/ui/cards', null, accessToken)
+
+        // Done
+        return json
+
+    }
+
+    /** Create a custom card */
+    static async createCard(accessToken: string, cardName: string, cardURL: string) {
+
+        // Create card
+        let json = await this.sendRequest('POST', '/open-api/v2/rest/ui/cards', {
+            label: cardName,
+            cast_settings: {
+                default: '2×2',
+                dimensions: [
+                    {
+                        src: cardURL,
+                        size: '2×2',
+                    },
+                ]
+            },
+            web_settings: {
+                default: '1×1',
+                drawer_component: { src: cardURL },
+                dimensions: [
+                    {
+                        src: cardURL,
+                        size: '1×1',
+                    },
+                    {
+                        src: cardURL,
+                        size: '2×1',
+                    },
+                ]
+            },
+        }, accessToken)
+
+        // Done
+        return json
+
+    }
+
 }
 
 /** Event request */
