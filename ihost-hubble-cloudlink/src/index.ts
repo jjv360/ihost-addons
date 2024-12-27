@@ -169,7 +169,7 @@ async function runIteration() {
 
         // Create card
         console.log('Creating card...')
-        card = await iHost.createCard(ihostAccessToken, 'Hubble CloudLink Usage', iHost.baseURL + ':9009/card.html')
+        card = await iHost.createCard(ihostAccessToken, 'Hubble CloudLink Usage', 'http://ihost.local:9009/card.html')
 
     }
     
