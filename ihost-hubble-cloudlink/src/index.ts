@@ -213,7 +213,7 @@ async function runIteration() {
                 payload: {
                     state: {
                         battery: { battery: parseInt(connection.retrievedKeys['Sys_SOC']) || -1, },
-                        "electric-power": { "electric-power": parseInt(connection.retrievedKeys['Sys_P_Grid'])*100 || 0, },
+                        "electric-power": { "electric-power": parseInt(connection.retrievedKeys['Sys_P_Load'])*100 || 0, },
                     }
                 }
             }
